@@ -89,8 +89,10 @@ stopBtn.addEventListener("click", async () => {
 
 // Save to backend
 async function saveTaskToBackend(task, startTime, stopTime) {
+    const backendUrl = "https://notion-time.vercel.app/save-to-notion"; // Replace with your actual backend URL
+
     try {
-        const response = await fetch("http://localhost:3000/save-to-notion", {
+        const response = await fetch(backendUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ task, startTime, stopTime }),
@@ -99,7 +101,8 @@ async function saveTaskToBackend(task, startTime, stopTime) {
         if (response.ok) {
             console.log("Task saved successfully.");
         } else {
-            console.error("Failed to save task.");
+            const errorDetails = await response.json();
+            console.error("Failed to save task:", errorDetails);
         }
     } catch (error) {
         console.error("Error saving task:", error);
