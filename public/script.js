@@ -14,6 +14,9 @@ let selectedEmoji = null;
 // Emoji list
 const emojiList = ["😀", "🎉", "✅", "🔥", "🌟", "💻", "📚", "📝", "⚡", "🕒"];
 
+// Backend API URL
+const backendUrl = "https://notion-time-9qe4gkgy9-mijnap1s-projects.vercel.app/"; // Replace with your backend URL
+
 // Format time
 function formatTime(ms) {
     const milliseconds = String(ms % 1000).padStart(3, "0");
@@ -89,8 +92,6 @@ stopBtn.addEventListener("click", async () => {
 
 // Save to backend
 async function saveTaskToBackend(task, startTime, stopTime) {
-    const backendUrl = "https://notion-time-9qe4gkgy9-mijnap1s-projects.vercel.app/api/save-to-notion"; // Ensure this is correct
-
     try {
         const response = await fetch(backendUrl, {
             method: "POST",
