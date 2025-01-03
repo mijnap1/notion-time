@@ -14,7 +14,7 @@ const notionIntegrationToken = process.env.NOTION_TOKEN;
 const databaseId = process.env.NOTION_DATABASE_ID;
 
 // Middleware to enable CORS
-app.use(cors({ origin: "https://notion-time.vercel.app" })); // Replace with your frontend URL
+app.use(cors({ origin: "https://notion-time.vercel.app/" })); // Replace with your frontend URL
 app.use(express.json());
 
 app.post("/save-to-notion", async (req, res) => {
