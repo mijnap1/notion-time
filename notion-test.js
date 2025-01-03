@@ -1,8 +1,8 @@
 import express from "express";
+import cors from "cors";
 import fetch from "node-fetch";
 import path from "path";
 import { fileURLToPath } from "url";
-import cors from "cors"; // Import the CORS package
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -13,11 +13,9 @@ const port = process.env.PORT || 3000;
 const notionIntegrationToken = process.env.NOTION_TOKEN;
 const databaseId = process.env.NOTION_DATABASE_ID;
 
-// Enable CORS for your frontend URL
-app.use(cors({ origin: "https://notion-time.vercel.app" })); // Replace with your frontend's URL
-
+// Middleware to enable CORS
+app.use(cors({ origin: "https://notion-time.vercel.app" })); // Replace with your frontend URL
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
 
 app.post("/save-to-notion", async (req, res) => {
     const { task, startTime, stopTime } = req.body;
