@@ -1,5 +1,4 @@
 import express from "express";
-import cors from "cors";
 import fetch from "node-fetch";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -13,11 +12,20 @@ const port = process.env.PORT || 3000;
 const notionIntegrationToken = process.env.NOTION_TOKEN;
 const databaseId = process.env.NOTION_DATABASE_ID;
 
-// Middleware to enable CORS
-app.use(cors({ origin: "https://notion-time.vercel.app/" })); // Replace with your frontend URL
+// Middleware to parse JSON
 app.use(express.json());
 
-app.post("/save-to-notion", async (req, res) => {
+// Main endpoint with CORS headers
+app.post("/api/save-to-notion", async (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "https://notion-time.vercel.app"); // Frontend URL
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+    if (req.method === "OPTIONS") {
+        res.status(200).end(); // Preflight handling
+        return;
+    }
+
     const { task, startTime, stopTime } = req.body;
 
     const notionUrl = "https://api.notion.com/v1/pages";
@@ -52,6 +60,7 @@ app.post("/save-to-notion", async (req, res) => {
             res.status(500).json({ error: "Failed to save task to Notion.", details: errorDetails });
         }
     } catch (error) {
+        console.error("Error saving task to Notion:", error);
         res.status(500).json({ error: "Internal server error." });
     }
 });
