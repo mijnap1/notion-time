@@ -2,18 +2,19 @@ import express from "express";
 import fetch from "node-fetch";
 import path from "path";
 import { fileURLToPath } from "url";
-import dotenv from "dotenv";
-
-dotenv.config();
+import cors from "cors"; // Import the CORS package
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const port = process.env.PORT || 3000; // Use environment variable for port
+const port = process.env.PORT || 3000;
 
 const notionIntegrationToken = process.env.NOTION_TOKEN;
 const databaseId = process.env.NOTION_DATABASE_ID;
+
+// Enable CORS for your frontend URL
+app.use(cors({ origin: "https://notion-time.vercel.app" })); // Replace with your frontend's URL
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
@@ -49,7 +50,8 @@ app.post("/save-to-notion", async (req, res) => {
         if (response.ok) {
             res.status(200).json({ message: "Task saved successfully." });
         } else {
-            res.status(500).json({ error: "Failed to save task to Notion." });
+            const errorDetails = await response.json();
+            res.status(500).json({ error: "Failed to save task to Notion.", details: errorDetails });
         }
     } catch (error) {
         res.status(500).json({ error: "Internal server error." });
